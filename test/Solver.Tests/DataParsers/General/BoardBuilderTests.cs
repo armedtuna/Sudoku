@@ -9,17 +9,74 @@ namespace Solver.Tests.DataParsers.General
     public class BoardBuilderTests
     {
         [Fact]
-        public void Board_Parses()
+        public void Board_ParsesCellData()
         {
-            var converter = new BoardBuilder();
-            var cells = BuildCells();
-            var board = converter.BuildBoard(cells);
+            var board = BuildBoard();
 
             Assert.NotNull(board);
             Assert.NotNull(board.Cells);
             Assert.NotNull(board.Rows);
             Assert.NotNull(board.Columns);
             Assert.NotNull(board.Blocks);
+            VerifyBlocks(board);
+            VerifyRows(board);
+            VerifyColumns(board);
+        }
+
+        [Fact]
+        public void Board_CreatesCellParents()
+        {
+            var board = BuildBoard();
+
+            VerifyParentBlocks(board);
+            VerifyParentRows(board);
+            VerifyParentColumns(board);
+        }
+
+        private void VerifyParentRows(Board board)
+        {
+            for (var blockRowIndex = 0; blockRowIndex < board.Rows.Length; blockRowIndex++)
+            {
+                var row = board.Rows[blockRowIndex];
+                for (var index = 0; index < row.Cells.Length; index++)
+                {
+                    Assert.Equal(row, row.Cells[index].ParentRow);
+                }
+            }
+        }
+
+        private void VerifyParentColumns(Board board)
+        {
+            for (var blockColumnIndex = 0; blockColumnIndex < board.Columns.Length; blockColumnIndex++)
+            {
+                var column = board.Columns[blockColumnIndex];
+                for (var index = 0; index < column.Cells.Length; index++)
+                {
+                    Assert.Equal(column, column.Cells[index].ParentColumn);
+                }
+            }
+        }
+
+        private void VerifyParentBlocks(Board board)
+        {
+            for (var blockRowIndex = 0; blockRowIndex < 3; blockRowIndex++)
+            {
+                for (var blockColumnIndex = 0; blockColumnIndex < 3; blockColumnIndex++)
+                {
+                    var block = board.Blocks[blockRowIndex, blockColumnIndex];
+                    for (var rowIndex = 0; rowIndex <= block.Cells.GetUpperBound(0); rowIndex++)
+                    {
+                        for (var columnIndex = 0; columnIndex <= block.Cells.GetUpperBound(1); columnIndex++)
+                        {
+                            Assert.Equal(block, block.Cells[rowIndex, columnIndex].ParentBlock);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void VerifyBlocks(Board board)
+        {
             var block1 = BuildJoinedString("2  ", "   ", "  5");
             var block2 = BuildJoinedString(" 94", "8 5", "7  ");
             var block3 = BuildJoinedString("7 5", "1  ", " 4 ");
@@ -38,6 +95,10 @@ namespace Solver.Tests.DataParsers.General
             Assert.Equal(block7, board.Blocks[2, 0].ToActualString());
             Assert.Equal(block8, board.Blocks[2, 1].ToActualString());
             Assert.Equal(block9, board.Blocks[2, 2].ToActualString());
+        }
+
+        private void VerifyRows(Board board)
+        {
             var row1 = BuildJoinedString("2   947 5");
             var row2 = BuildJoinedString("   8 51  ");
             var row3 = BuildJoinedString("  57   4 ");
@@ -56,6 +117,10 @@ namespace Solver.Tests.DataParsers.General
             Assert.Equal(row7, board.Rows[6].ToActualString());
             Assert.Equal(row8, board.Rows[7].ToActualString());
             Assert.Equal(row9, board.Rows[8].ToActualString());
+        }
+
+        private void VerifyColumns(Board board)
+        {
             var column1 = BuildJoinedString("2", " ", " ", " ", "1", "7", " ", " ", "4");
             var column2 = BuildJoinedString(" ", " ", " ", " ", " ", " ", "1", " ", " ");
             var column3 = BuildJoinedString(" ", " ", "5", " ", "8", "4", " ", "2", "3");
@@ -86,6 +151,13 @@ namespace Solver.Tests.DataParsers.General
             return sb.ToString();
             // return String.Join(Environment.NewLine, rows) +
             //     Environment.NewLine;
+        }
+
+        private Board BuildBoard()
+        {
+            var converter = new BoardBuilder();
+            var cells = BuildCells();
+            return converter.BuildBoard(cells);
         }
 
         private Cell[,] BuildCells()

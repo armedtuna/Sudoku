@@ -4,6 +4,12 @@ namespace Sudoku
 {
     public class Cell
     {
+        public Block ParentBlock { get; set; }
+
+        public Row ParentRow { get; set; }
+
+        public Column ParentColumn { get; set; }
+
         public byte Actual { get; set; }
 
         public List<byte> Possibilities { get; set; }

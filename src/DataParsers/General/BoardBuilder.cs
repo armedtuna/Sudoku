@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sudoku;
 
 namespace DataParsers.General
@@ -6,14 +7,13 @@ namespace DataParsers.General
     {
         public Board BuildBoard(Cell[,] cells)
         {
-            var board = new Board();
-
             var slicer = new ArraySlicer<Cell>(cells);
             var maxRows = slicer.RowUpperBound - slicer.RowLowerBound + 1;
             var maxColumns = slicer.ColumnUpperBound - slicer.ColumnLowerBound + 1;
             var maxBlockRows = maxRows / 3;
             var maxBlockColumns = maxColumns / 3;
 
+            var board = new Board();
             board.Cells = cells;
             board.Rows = BuildRows(maxRows, slicer);
             board.Columns = BuildColumns(maxColumns, slicer);
@@ -27,10 +27,15 @@ namespace DataParsers.General
             var rows = new Row[maxRows];
             for (var rowIndex = 0; rowIndex < maxRows; rowIndex++)
             {
-                rows[rowIndex] = new Row
+                var row = new Row
                 {
                     Cells = slicer.GetRowSlice(rowIndex)
                 };
+                for (var i = 0; i < row.Cells.Length; i++)
+                {
+                    row.Cells[i].ParentRow = row;
+                }
+                rows[rowIndex] = row;
             }
 
             return rows;
@@ -41,10 +46,15 @@ namespace DataParsers.General
             var columns = new Column[maxColumns];
             for (var columnIndex = 0; columnIndex < maxColumns; columnIndex++)
             {
-                columns[columnIndex] = new Column
+                var column = new Column
                 {
                     Cells = slicer.GetColumnSlice(columnIndex)
                 };
+                for (var i = 0; i < column.Cells.Length; i++)
+                {
+                    column.Cells[i].ParentColumn = column;
+                }
+                columns[columnIndex] = column;
             }
 
             return columns;
@@ -61,10 +71,18 @@ namespace DataParsers.General
                     var c1 = columnIndex * maxBlockColumns;
                     var r2 = r1 + maxBlockRows - 1;
                     var c2 = c1 + maxBlockColumns - 1;
-                    blocks[rowIndex, columnIndex] = new Block
+                    var block = new Block
                     {
                         Cells = slicer.GetBlockSlice(r1, c1, r2, c2)
                     };
+                    for (var i = 0; i <= block.Cells.GetUpperBound(0); i++)
+                    {
+                        for (var j = 0; j <= block.Cells.GetUpperBound(1); j++)
+                        {
+                            block.Cells[i, j].ParentBlock = block;
+                        }
+                    }
+                    blocks[rowIndex, columnIndex] = block;
                 }
             }
 

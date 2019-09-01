@@ -130,7 +130,6 @@ namespace Solver.Tests.DataParsers.TextFile
             Assert.Equal(0, cells[8, 6].Actual);
             Assert.Equal(0, cells[8, 7].Actual);
             Assert.Equal(2, cells[8, 8].Actual);
-
         }
 
         private string BuildContents()

@@ -78,8 +78,7 @@ namespace DataParsers.TextFile
         {
             return new Cell
             {
-                Actual = number,
-                Possibilities = new List<byte>()
+                Actual = number
             };
         }
     }
