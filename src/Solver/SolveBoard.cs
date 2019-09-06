@@ -11,10 +11,24 @@ namespace Solver
         public void Solve(Board board)
         {
             _board = board;
-            EnsurePossibilities();
+
+            var loop = 100;
+            var proceed = true;
+            while (proceed && (loop-- > 0))
+            {
+                proceed = !SolvePossibilities();
+                Console.WriteLine(_board.ToActualString());
+            }
+            Console.WriteLine();
         }
 
-        private void EnsurePossibilities()
+        private bool Solve()
+        {
+            // todo-at: solve by row, column, and block
+            return SolvePossibilities();
+        }
+
+        private bool SolvePossibilities()
         {
             var cells = _board.Cells;
 
@@ -22,52 +36,26 @@ namespace Solver
             var rowIndexUpperBound = cells.GetUpperBound(0);
             var columnIndexLowerBound = cells.GetLowerBound(1);
             var columnIndexUpperBound = cells.GetUpperBound(1);
+            var cellsLeft = 0;
             for (var rowIndex = rowIndexLowerBound; rowIndex <= rowIndexUpperBound; rowIndex++)
             {
                 for (var columnIndex = columnIndexLowerBound; columnIndex <= columnIndexUpperBound; columnIndex++)
                 {
                     var cell = cells[rowIndex, columnIndex];
-                    if (cell.Possibilities == null)
+                    if (cell.Possibilities.Count == 1)
                     {
-                        cell.Possibilities = new List<byte>();
+                        Console.WriteLine($"Setting cell actual: {cell.Possibilities[0]}");
+                        cell.SetActual(cell.Possibilities[0]);
+                    }
+                    else if (cell.Possibilities.Count > 1)
+                    {
+                        cellsLeft++;
                     }
                 }
             }
-        }
+            Console.WriteLine($"{cellsLeft} cells left.");
 
-        // todo-at: test?
-        // todo-at: is method in the correct place? this can also be used by someone solving the puzzle
-        private void SetActual(Cell cell, byte actual)
-        {
-            if (!cell.Possibilities.Contains(actual))
-            {
-                var possiblitiesString = string.Join(", ", cell.Possibilities);
-                // todo-at: if used by someone playing the puzzle then this exception shouldn't be thrown
-                throw new Exception($"Cell with possiblities {possiblitiesString} doesn't contain {actual}.");
-            }
-
-            cell.Actual = actual;
-
-            var parentRowCells = cell.ParentRow.Cells;
-            for (var i = 0; i < parentRowCells.Length; i++)
-            {
-                parentRowCells[i].Possibilities.Remove(actual);
-            }
-
-            var parentColumnCells = cell.ParentColumn.Cells;
-            for (var i = 0; i < parentColumnCells.Length; i++)
-            {
-                parentColumnCells[i].Possibilities.Remove(actual);
-            }
-
-            var parentBlockCells = cell.ParentBlock.Cells;
-            for (var i = 0; i <= parentBlockCells.GetUpperBound(0); i++)
-            {
-                for (var j = 0; j <= parentBlockCells.GetUpperBound(1); j++)
-                {
-                    parentBlockCells[i, j].Possibilities.Remove(actual);
-                }
-            }
+            return cellsLeft == 0;
         }
     }
 }

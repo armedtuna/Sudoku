@@ -178,10 +178,9 @@ namespace Solver.Tests.DataParsers.General
 
         private Cell BuildCell(byte number)
         {
-            return new Cell
-            {
-                Actual = number
-            };
+            var cell = new Cell();
+            cell.SetActual(number);
+            return cell;
         }
     }
 }

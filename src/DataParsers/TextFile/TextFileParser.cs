@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentValidation;
@@ -11,7 +10,6 @@ namespace DataParsers.TextFile
     {
         private readonly Validators.ContentsArrayValidator _validator;
 
-        // todo-at: set up di
         public TextFileParser(Validators.ContentsArrayValidator validator)
         {
             _validator = validator;
@@ -76,10 +74,9 @@ namespace DataParsers.TextFile
 
         private Cell BuildCell(byte number)
         {
-            return new Cell
-            {
-                Actual = number
-            };
+            var cell = new Cell();
+            cell.SetActual(number);
+            return cell;
         }
     }
 }

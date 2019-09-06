@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sudoku;
 
 namespace DataParsers.General
@@ -19,7 +21,23 @@ namespace DataParsers.General
             board.Columns = BuildColumns(maxColumns, slicer);
             board.Blocks = BuildBlocks(maxBlockRows, maxBlockColumns, slicer);
 
+            // since the rows, columns, and blocks were not set up until now, the possibilities could not be calculated
+            // todo-at: consider setting up the board before hand and then importing a cells array -- same result?
+            RefreshPossibilities(board);
+
             return board;
+        }
+
+        private void RefreshPossibilities(Board board)
+        {
+            for (var i = 0; i <= board.Cells.GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= board.Cells.GetUpperBound(1); j++)
+                {
+                    var cell = board.Cells[i, j];
+                    board.Cells[i, j].RemovePossibility(cell.Actual, true);
+                }
+            }
         }
 
         private Row[] BuildRows(int maxRows, ArraySlicer<Cell> slicer)
