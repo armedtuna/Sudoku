@@ -22,7 +22,6 @@ namespace DataParsers.General
             board.Blocks = BuildBlocks(maxBlockRows, maxBlockColumns, slicer);
 
             // since the rows, columns, and blocks were not set up until now, the possibilities could not be calculated
-            // todo-at: consider setting up the board before hand and then importing a cells array -- same result?
             RefreshPossibilities(board);
 
             return board;

@@ -134,7 +134,6 @@ namespace Solver.Tests.DataParsers.TextFile
 
         private string BuildContents()
         {
-            // todo-at: consider loading this data from a text file
             return
                 "2   947 5" + Environment.NewLine +
                 "   8 51" + Environment.NewLine +

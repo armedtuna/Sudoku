@@ -35,7 +35,6 @@ namespace Sudoku
             return c.ToString();
         }
 
-        // todo-at: test?
         public void SetActual(byte actual)
         {
             _actual = actual;
