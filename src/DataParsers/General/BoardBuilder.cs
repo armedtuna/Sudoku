@@ -28,18 +28,6 @@ namespace DataParsers.General
             return board;
         }
 
-        private void RefreshPossibilities(Board board)
-        {
-            for (var i = 0; i <= board.Cells.GetUpperBound(0); i++)
-            {
-                for (var j = 0; j <= board.Cells.GetUpperBound(1); j++)
-                {
-                    var cell = board.Cells[i, j];
-                    board.Cells[i, j].RemovePossibility(cell.Actual, true);
-                }
-            }
-        }
-
         private Row[] BuildRows(int maxRows, ArraySlicer<Cell> slicer)
         {
             var rows = new Row[maxRows];
@@ -105,6 +93,18 @@ namespace DataParsers.General
             }
 
             return blocks;
+        }
+
+        private void RefreshPossibilities(Board board)
+        {
+            for (var i = 0; i <= board.Cells.GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= board.Cells.GetUpperBound(1); j++)
+                {
+                    var cell = board.Cells[i, j];
+                    cell.RemovePossibility(cell.Actual);
+                }
+            }
         }
     }
 }
