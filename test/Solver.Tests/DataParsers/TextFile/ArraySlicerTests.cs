@@ -1,5 +1,6 @@
 using Xunit;
 using DataParsers.General;
+using FluentAssertions;
 
 namespace SolverUnitTests.DataParsers.TextFile
 {
@@ -14,9 +15,8 @@ namespace SolverUnitTests.DataParsers.TextFile
 
             var slice = slicer.GetRowSlice(2);
 
-            // todo-at: switch to fluent validation
-            Assert.Equal(5, slice.Length);
-            Assert.Equal(new byte[] { 11, 12, 13, 14, 15 }, slice);
+            slice.Length.Should().Be(5);
+            slice.Should().Contain(new byte[] { 11, 12, 13, 14, 15 });
         }
 
         [Fact]
@@ -28,8 +28,8 @@ namespace SolverUnitTests.DataParsers.TextFile
 
             var slice = slicer.GetColumnSlice(1);
 
-            Assert.Equal(4, slice.Length);
-            Assert.Equal(new byte[] { 2, 7, 12, 17 }, slice);
+            slice.Length.Should().Be(4);
+            slice.Should().Contain(new byte[] { 2, 7, 12, 17 });
         }
 
         [Fact]
@@ -41,9 +41,9 @@ namespace SolverUnitTests.DataParsers.TextFile
 
             var slice = slicer.GetBlockSlice(1, 1, 2, 3);
 
-            // Assert.Equal(1, slice.GetUpperBound(0));
-            // Assert.Equal(2, slice.GetUpperBound(1));
-            Assert.Equal(new byte[,] { { 7, 8, 9 }, { 12, 13, 14 } }, slice);
+            slice.GetUpperBound(0).Should().Be(1);
+            slice.GetUpperBound(1).Should().Be(2);
+            slice.Should().Contain(new byte[,] { { 7, 8, 9 }, { 12, 13, 14 } });
         }
 
         private byte[,] BuildData()

@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using DataParsers.General;
+using FluentAssertions;
 using Sudoku;
 using Xunit;
 
@@ -13,11 +14,11 @@ namespace Solver.Tests.DataParsers.General
         {
             var board = BuildBoard();
 
-            Assert.NotNull(board);
-            Assert.NotNull(board.Cells);
-            Assert.NotNull(board.Rows);
-            Assert.NotNull(board.Columns);
-            Assert.NotNull(board.Blocks);
+            board.Should().NotBeNull();
+            board.Cells.Should().NotBeNull();
+            board.Rows.Should().NotBeNull();
+            board.Columns.Should().NotBeNull();
+            board.Blocks.Should().NotBeNull();
             VerifyBlocks(board);
             VerifyRows(board);
             VerifyColumns(board);
@@ -40,7 +41,7 @@ namespace Solver.Tests.DataParsers.General
                 var row = board.Rows[blockRowIndex];
                 for (var index = 0; index < row.Cells.Length; index++)
                 {
-                    Assert.Equal(row, row.Cells[index].ParentRow);
+                    row.Cells[index].ParentRow.Should().Be(row);
                 }
             }
         }
@@ -52,7 +53,7 @@ namespace Solver.Tests.DataParsers.General
                 var column = board.Columns[blockColumnIndex];
                 for (var index = 0; index < column.Cells.Length; index++)
                 {
-                    Assert.Equal(column, column.Cells[index].ParentColumn);
+                    column.Cells[index].ParentColumn.Should().Be(column);
                 }
             }
         }
@@ -68,7 +69,7 @@ namespace Solver.Tests.DataParsers.General
                     {
                         for (var columnIndex = 0; columnIndex <= block.Cells.GetUpperBound(1); columnIndex++)
                         {
-                            Assert.Equal(block, block.Cells[rowIndex, columnIndex].ParentBlock);
+                            block.Cells[rowIndex, columnIndex].ParentBlock.Should().Be(block);
                         }
                     }
                 }
@@ -86,15 +87,17 @@ namespace Solver.Tests.DataParsers.General
             var block7 = BuildJoinedString(" 1 ", "  2", "4 3");
             var block8 = BuildJoinedString("  6", "9 8", "15 ");
             var block9 = BuildJoinedString("3  ", "   ", "  2");
-            Assert.Equal(block1, board.Blocks[0, 0].ToActualString());
-            Assert.Equal(block2, board.Blocks[0, 1].ToActualString());
-            Assert.Equal(block3, board.Blocks[0, 2].ToActualString());
-            Assert.Equal(block4, board.Blocks[1, 0].ToActualString());
-            Assert.Equal(block5, board.Blocks[1, 1].ToActualString());
-            Assert.Equal(block6, board.Blocks[1, 2].ToActualString());
-            Assert.Equal(block7, board.Blocks[2, 0].ToActualString());
-            Assert.Equal(block8, board.Blocks[2, 1].ToActualString());
-            Assert.Equal(block9, board.Blocks[2, 2].ToActualString());
+            board.Blocks.GetUpperBound(0).Should().Be(2);
+            board.Blocks.GetUpperBound(1).Should().Be(2);
+            board.Blocks[0, 0].ToActualString().Should().Be(block1);
+            board.Blocks[0, 1].ToActualString().Should().Be(block2);
+            board.Blocks[0, 2].ToActualString().Should().Be(block3);
+            board.Blocks[1, 0].ToActualString().Should().Be(block4);
+            board.Blocks[1, 1].ToActualString().Should().Be(block5);
+            board.Blocks[1, 2].ToActualString().Should().Be(block6);
+            board.Blocks[2, 0].ToActualString().Should().Be(block7);
+            board.Blocks[2, 1].ToActualString().Should().Be(block8);
+            board.Blocks[2, 2].ToActualString().Should().Be(block9);
         }
 
         private void VerifyRows(Board board)
@@ -108,15 +111,16 @@ namespace Solver.Tests.DataParsers.General
             var row7 = BuildJoinedString(" 1   63  ");
             var row8 = BuildJoinedString("  29 8   ");
             var row9 = BuildJoinedString("4 315   2");
-            Assert.Equal(row1, board.Rows[0].ToActualString());
-            Assert.Equal(row2, board.Rows[1].ToActualString());
-            Assert.Equal(row3, board.Rows[2].ToActualString());
-            Assert.Equal(row4, board.Rows[3].ToActualString());
-            Assert.Equal(row5, board.Rows[4].ToActualString());
-            Assert.Equal(row6, board.Rows[5].ToActualString());
-            Assert.Equal(row7, board.Rows[6].ToActualString());
-            Assert.Equal(row8, board.Rows[7].ToActualString());
-            Assert.Equal(row9, board.Rows[8].ToActualString());
+            board.Rows.Length.Should().Be(9);
+            board.Rows[0].ToActualString().Should().Be(row1);
+            board.Rows[1].ToActualString().Should().Be(row2);
+            board.Rows[2].ToActualString().Should().Be(row3);
+            board.Rows[3].ToActualString().Should().Be(row4);
+            board.Rows[4].ToActualString().Should().Be(row5);
+            board.Rows[5].ToActualString().Should().Be(row6);
+            board.Rows[6].ToActualString().Should().Be(row7);
+            board.Rows[7].ToActualString().Should().Be(row8);
+            board.Rows[8].ToActualString().Should().Be(row9);
         }
 
         private void VerifyColumns(Board board)
@@ -130,15 +134,16 @@ namespace Solver.Tests.DataParsers.General
             var column7 = BuildJoinedString("7", "1", " ", "8", "5", " ", "3", " ", " ");
             var column8 = BuildJoinedString(" ", " ", "4", " ", " ", " ", " ", " ", " ");
             var column9 = BuildJoinedString("5", " ", " ", "7", "4", " ", " ", " ", "2");
-            Assert.Equal(column1, board.Columns[0].ToActualString());
-            Assert.Equal(column2, board.Columns[1].ToActualString());
-            Assert.Equal(column3, board.Columns[2].ToActualString());
-            Assert.Equal(column4, board.Columns[3].ToActualString());
-            Assert.Equal(column5, board.Columns[4].ToActualString());
-            Assert.Equal(column6, board.Columns[5].ToActualString());
-            Assert.Equal(column7, board.Columns[6].ToActualString());
-            Assert.Equal(column8, board.Columns[7].ToActualString());
-            Assert.Equal(column9, board.Columns[8].ToActualString());
+            board.Columns.Length.Should().Be(9);
+            board.Columns[0].ToActualString().Should().Be(column1);
+            board.Columns[1].ToActualString().Should().Be(column2);
+            board.Columns[2].ToActualString().Should().Be(column3);
+            board.Columns[3].ToActualString().Should().Be(column4);
+            board.Columns[4].ToActualString().Should().Be(column5);
+            board.Columns[5].ToActualString().Should().Be(column6);
+            board.Columns[6].ToActualString().Should().Be(column7);
+            board.Columns[7].ToActualString().Should().Be(column8);
+            board.Columns[8].ToActualString().Should().Be(column9);
         }
 
         private static string BuildJoinedString(params string[] rows)
