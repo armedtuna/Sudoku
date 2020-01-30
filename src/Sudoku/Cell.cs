@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sudoku
 {
     public class Cell
     {
         private byte _actual;
-        private List<byte> _possibilities;
 
         public Block ParentBlock { get; set; }
 
@@ -15,14 +15,10 @@ namespace Sudoku
 
         public byte Actual { get { return _actual; } }
 
-        public List<byte> Possibilities { get { return _possibilities; } }
+        // todo-at: change to array
+        public List<byte> Possibilities { get { return GetPossibilities().ToList(); } }
 
         public byte Guess { get; set; }
-
-        public Cell()
-        {            
-            _possibilities = new List<byte> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        }
  
         public string ToActualString()
         {
@@ -38,40 +34,15 @@ namespace Sudoku
         public void SetActual(byte actual)
         {
             _actual = actual;
-
-            RemovePossibility(actual);
         }
 
-        public void RemovePossibility(byte possibility)
+        public byte[] GetPossibilities()
         {
-            if (ParentRow?.Cells != null)
-            {
-                for (var i = 0; i < ParentRow.Cells.Length; i++)
-                {
-                    ParentRow.Cells[i]._possibilities.Remove(possibility);
-                }
-            }
-
-            if (ParentColumn?.Cells != null)
-            {
-                for (var i = 0; i < ParentColumn.Cells.Length; i++)
-                {
-                    ParentColumn.Cells[i]._possibilities.Remove(possibility);
-                }
-            }
-
-            if (ParentBlock?.Cells != null)
-            {
-                for (var i = 0; i <= ParentBlock.Cells.GetUpperBound(0); i++)
-                {
-                    for (var j = 0; j <= ParentBlock.Cells.GetUpperBound(1); j++)
-                    {
-                        ParentBlock.Cells[i, j]._possibilities.Remove(possibility);
-                    }
-                }
-            }
-
-            _possibilities.Remove(possibility);
+            return new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+                .Except(ParentBlock.GetActualValues())
+                .Except(ParentRow.GetActualValues())
+                .Except(ParentColumn.GetActualValues())
+                .ToArray();
         }
    }
 }

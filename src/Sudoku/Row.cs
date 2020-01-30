@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Sudoku
@@ -17,6 +18,20 @@ namespace Sudoku
             sb.Append(Environment.NewLine);
 
             return sb.ToString();
+        }
+
+        public byte[] GetActualValues()
+        {
+            var actuals = new List<byte>();
+            for (var index = Cells.GetLowerBound(0); index <= Cells.GetUpperBound(0); index++)
+            {
+                if (Cells[index].Actual != 0)
+                {
+                    actuals.Add(Cells[index].Actual);
+                }
+            }
+
+            return actuals.ToArray();
         }
     }
 }

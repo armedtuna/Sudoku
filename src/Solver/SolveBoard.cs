@@ -24,7 +24,6 @@ namespace Solver
 
         private bool Solve()
         {
-            // todo-at: solve by row, column, and block
             return SolvePossibilities();
         }
 

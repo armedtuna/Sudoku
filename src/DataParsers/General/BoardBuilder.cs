@@ -21,9 +21,6 @@ namespace DataParsers.General
             board.Columns = BuildColumns(maxColumns, slicer);
             board.Blocks = BuildBlocks(maxBlockRows, maxBlockColumns, slicer);
 
-            // since the rows, columns, and blocks were not set up until now, the possibilities could not be calculated
-            RefreshPossibilities(board);
-
             return board;
         }
 
@@ -92,18 +89,6 @@ namespace DataParsers.General
             }
 
             return blocks;
-        }
-
-        private void RefreshPossibilities(Board board)
-        {
-            for (var i = 0; i <= board.Cells.GetUpperBound(0); i++)
-            {
-                for (var j = 0; j <= board.Cells.GetUpperBound(1); j++)
-                {
-                    var cell = board.Cells[i, j];
-                    cell.RemovePossibility(cell.Actual);
-                }
-            }
         }
     }
 }
