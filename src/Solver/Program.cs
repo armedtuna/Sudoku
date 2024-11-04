@@ -12,7 +12,9 @@ namespace SudokuSolver
 
             var provider = services.BuildServiceProvider();
             var parser = provider.GetRequiredService<DataParsers.TextFile.TextFileParser>();
-            var cells = parser.Load("src/solver/data/01.txt");
+            var cells = parser.Load("Data/01.txt");
+            // todo-at: there's a bug raised via data from 02.txt / need to look into that later when there's time
+            //var cells = parser.Load("Data/02.txt");
 
             // todo-at: thinking about how to build a render class / interface
 

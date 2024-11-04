@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SudokuSolver</RootNamespace>
   </PropertyGroup>
 
@@ -13,6 +13,15 @@
   <ItemGroup>
     <ProjectReference Include="..\DataParsers\DataParsers.csproj" />
     <ProjectReference Include="..\Sudoku\Sudoku.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\01.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\02.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
